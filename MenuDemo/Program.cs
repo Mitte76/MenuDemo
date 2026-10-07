@@ -54,11 +54,10 @@
             }
         }
 
-        static void MalformedInput(string? additionalTest = null)
+        static void MalformedInput()
         {
             Console.Clear();
             Console.WriteLine("Felaktig inmatning, försök igen\n");
-            if (additionalTest != null) Console.WriteLine(additionalTest);
         }
 
         static void PressAnyKey()
@@ -70,14 +69,17 @@
 
         static void WordLoop()
         {
-            Console.WriteLine("Skriv ett ord eller mening");
-            string? input = Console.ReadLine();
-            if (input == null || input.Length == 0)
+            string? input;
+            do
             {
-                MalformedInput();
-                WordLoop();
-                return;
-            }
+                Console.WriteLine("Skriv ett ord eller mening");
+                input = Console.ReadLine();
+
+                if (string.IsNullOrEmpty(input))
+                    MalformedInput();
+
+            } while (string.IsNullOrEmpty(input));
+
             for (int i = 0; i < 10; i++)
             {
                 Console.Write(input);
@@ -89,21 +91,31 @@
         static void FindThirdWord()
         {
             Console.Clear();
-            Console.WriteLine("Skriv en mening med minst tre ord");
 
-            string? input = Console.ReadLine();
-            if (input == null) return;
-            string[] words = input.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-
-            if (words.Length > 2)
+            string[] words;
+            while (true) 
             {
-                Console.WriteLine($"Det tredje ordet är: \"{words[2]}\"");
-            }
-            else
-            {
-                Console.WriteLine("Du måste skriva en mening med minst tre ord");
-            }
+                Console.WriteLine("Skriv en mening med minst tre ord");
+                string? input = Console.ReadLine();
 
+                if (string.IsNullOrEmpty(input))
+                {
+                    MalformedInput();
+                    continue;
+                }
+
+                words = input.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                if (words.Length > 2)
+                {
+                    Console.WriteLine($"Det tredje ordet är: \"{words[2]}\"");
+                    break;
+                }
+                else
+                {
+                    MalformedInput();
+                }
+
+            } 
         }
 
         static void GetPartyPrice()
@@ -130,14 +142,14 @@
 
                         for (int i = 0; i < peopleInParty; i++)
                         {
-                            int price = CheckPrice(i + 1);
-                            if (price == -1)
+                            int? price = CheckPrice(i + 1);
+                            if (price == null)
                             {
                                 if (i == 0) //Om vi inte har fått några priser avbryt helt annars rapporterar vi tillbaka det vi har,
                                     canceled = true;
                                 break;
                             }
-                            totalPrice += price;
+                            totalPrice += price.Value;
                             peopleCounted++;
                         }
                         break;
@@ -160,7 +172,7 @@
             }
             else Console.Clear();
         }
-        static int CheckPrice(int person = 0, bool printToConsole = false)
+        static int? CheckPrice(int person = 0, bool printToConsole = false)
         {
 
             const int youthPrice = 80;
@@ -181,7 +193,7 @@
 
                 if (int.TryParse(input, out int age))
                 {
-                    if(age < 0)
+                    if (age < 0)
                     {
                         Console.WriteLine("Ålder kan inte vara mindre än 0");
                         continue;
@@ -220,7 +232,7 @@
 
                 else if (input == "x")
                 {
-                    return -1;
+                    return null;
                 }
                 else
                 {
