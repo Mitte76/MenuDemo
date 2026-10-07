@@ -95,11 +95,11 @@
 
             string[] items =
             [
-                "Kontrollera pris för 1 person",
-                "Kontrollera pris för ett sällskap",
-                "Repetera ord eller mening 10 gånger",
-                "Hitta tredje ordet i en mening",
-                "Avsluta"
+                "Pris för 1 person",
+                "Pris för ett sällskap",
+                "Repetera ord eller mening",
+                "Hitta tredje ordet",
+                "Avsluta",
             ];
 
             for (int i = 0; i < items.Length; i++)
@@ -152,7 +152,7 @@
             string[] words;
             while (true)
             {
-                Console.WriteLine("Skriv en mening med minst tre ord");
+                Console.WriteLine("Skriv en mening med minst tre ord (exit för att avsluta)");
                 string? input = Console.ReadLine();
 
                 if (string.IsNullOrEmpty(input))
@@ -160,6 +160,8 @@
                     MalformedInput();
                     continue;
                 }
+
+                if (input.ToLower() == "exit") break;
 
                 words = input.Split(' ', StringSplitOptions.RemoveEmptyEntries);
                 if (words.Length > 2)
@@ -182,9 +184,11 @@
             int peopleCounted = 0;
             bool canceled = false;
             Console.Clear();
+
             while (true)
             {
-                Console.WriteLine("Hur många personer ingår i sällskapet? (0 för att avbryta)");
+                Console.WriteLine("Antal personer i sällskapet?");
+
                 string? input = Console.ReadLine();
                 if (int.TryParse(input, out peopleInParty))
                 {
@@ -195,8 +199,7 @@
                     }
                     else
                     {
-                        Console.WriteLine("Ange x som ålder om du inte vill ange fler personer");
-
+                        Console.Clear();
                         for (int i = 0; i < peopleInParty; i++)
                         {
                             int? price = CheckPrice(i + 1);
@@ -240,7 +243,7 @@
             {
                 if (person > 0)
                 {
-                    Console.WriteLine($"Vilken ålder har person nr: {person}");
+                    Console.WriteLine($"Vilken ålder har person nr: {person} (x = avbryt)");
                 }
                 else
                 {
