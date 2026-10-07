@@ -83,6 +83,7 @@
 
         static void FindThirdWord()
         {
+            Console.Clear();
             Console.WriteLine("Skriv en mening med minst tre ord");
 
             string? input = Console.ReadLine();
@@ -125,7 +126,7 @@
                             {
                                 break;
                             }
-                            totalPrice += CheckPrice(i + 1);
+                            totalPrice += price;
                         }
                         break;
                     }
