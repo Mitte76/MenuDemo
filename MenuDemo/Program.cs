@@ -9,8 +9,9 @@
             while (!exitProgram)
             {
                 Console.WriteLine("HUVUDMENY:");
+                Console.WriteLine("----------");
                 Console.WriteLine("1. Kontrollera pris för 1 person");
-                Console.WriteLine("2. Kontrollera pris för ett sälskap");
+                Console.WriteLine("2. Kontrollera pris för ett sällskap");
                 Console.WriteLine("3. Repetera ord eller mening 10 gånger");
                 Console.WriteLine("4. Hitta tredje ordet i en mening");
                 Console.WriteLine("0. Avsluta");
@@ -19,7 +20,6 @@
 
                 if (int.TryParse(input, out int result))
                 {
-
                     switch (result)
                     {
                         case 0:
@@ -27,14 +27,15 @@
                             exitProgram = true;
                             break;
                         case 1:
+                            Console.Clear();
                             CheckPrice(printToConsole: true);
                             PressAnyKey();
                             break;
                         case 2:
                             GetPartyPrice();
-                            PressAnyKey();
                             break;
                         case 3:
+                            Console.Clear();
                             WordLoop();
                             break;
                         case 4:
@@ -53,10 +54,11 @@
             }
         }
 
-        static void MalformedInput()
+        static void MalformedInput(string? additionalTest = null)
         {
             Console.Clear();
             Console.WriteLine("Felaktig inmatning, försök igen\n");
+            if (additionalTest != null) Console.WriteLine(additionalTest);
         }
 
         static void PressAnyKey()
@@ -68,14 +70,19 @@
 
         static void WordLoop()
         {
-            Console.Clear();
             Console.WriteLine("Skriv ett ord eller mening");
             string? input = Console.ReadLine();
-
+            if (input == null || input.Length == 0)
+            {
+                MalformedInput();
+                WordLoop();
+                return;
+            }
             for (int i = 0; i < 10; i++)
             {
                 Console.Write(input);
             }
+            Console.WriteLine();
             PressAnyKey();
         }
 
@@ -103,31 +110,35 @@
         {
             int totalPrice = 0;
             int peopleInParty = 0;
+            int peopleCounted = 0;
             bool canceled = false;
-
+            Console.Clear();
             while (true)
             {
-                Console.Clear();
                 Console.WriteLine("Hur många personer ingår i sällskapet? (0 för att avbryta)");
                 string? input = Console.ReadLine();
                 if (int.TryParse(input, out peopleInParty))
                 {
-                    if (peopleInParty == 0)
+                    if (peopleInParty <= 0)
                     {
                         canceled = true;
                         break;
                     }
                     else
                     {
+                        Console.WriteLine("Ange x som ålder om du inte vill ange fler personer");
+
                         for (int i = 0; i < peopleInParty; i++)
                         {
                             int price = CheckPrice(i + 1);
-                            if(price == -1)
+                            if (price == -1)
                             {
-                                canceled = true;
+                                if (i == 0) //Om vi inte har fått några priser avbryt helt annars rapporterar vi tillbaka det vi har,
+                                    canceled = true;
                                 break;
                             }
                             totalPrice += price;
+                            peopleCounted++;
                         }
                         break;
                     }
@@ -139,27 +150,28 @@
             }
             if (!canceled)
             {
-                string noOfPeople = $"{"Antal personer i sällskapet:",-32} {peopleInParty}st";
+                string noOfPeople = $"{"Antal personer i sällskapet:",-32} {peopleCounted}st";
                 string cost = $"{"Priset för sällskapet är:",-32} {totalPrice}kr";
                 Console.Write("\n\n");
                 Console.WriteLine(noOfPeople);
                 Console.WriteLine(cost);
                 Console.WriteLine(new string('-', Math.Max(noOfPeople.Length, cost.Length)));
-
+                PressAnyKey();
             }
+            else Console.Clear();
         }
         static int CheckPrice(int person = 0, bool printToConsole = false)
         {
 
-            int youthPrice = 80;
-            int seniorPrice = 90;
-            int defaultPrice = 120;
+            const int youthPrice = 80;
+            const int seniorPrice = 90;
+            const int defaultPrice = 120;
 
             while (true)
             {
                 if (person > 0)
                 {
-                    Console.WriteLine($"Vilken ålder har person nr: {person} (x för att avbryta)");
+                    Console.WriteLine($"Vilken ålder har person nr: {person}");
                 }
                 else
                 {
@@ -169,6 +181,11 @@
 
                 if (int.TryParse(input, out int age))
                 {
+                    if(age < 0)
+                    {
+                        Console.WriteLine("Ålder kan inte vara mindre än 0");
+                        continue;
+                    }
                     if (age < 5)
                     {
                         if (printToConsole)
