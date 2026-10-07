@@ -2,55 +2,112 @@
 {
     internal class Program
     {
+        static int mainMenuItems = 5;
         static void Main(string[] args)
         {
 
             bool exitProgram = false;
+            int currentItem = 0;
             while (!exitProgram)
             {
-                Console.WriteLine("HUVUDMENY:");
-                Console.WriteLine("----------");
-                Console.WriteLine("1. Kontrollera pris för 1 person");
-                Console.WriteLine("2. Kontrollera pris för ett sällskap");
-                Console.WriteLine("3. Repetera ord eller mening 10 gånger");
-                Console.WriteLine("4. Hitta tredje ordet i en mening");
-                Console.WriteLine("0. Avsluta");
+                ShowMainMenu(currentItem);
 
-                string? input = Console.ReadLine();
-
-                if (int.TryParse(input, out int result))
+                ConsoleKey input = Console.ReadKey(true).Key;
+                switch (input)
                 {
-                    switch (result)
-                    {
-                        case 0:
-                            Console.WriteLine("Välkommen åter!");
+                    case ConsoleKey.DownArrow:
+                        currentItem++;
+                        if (currentItem >= mainMenuItems)
+                            currentItem = 0;
+                        break;
+                    case ConsoleKey.UpArrow:
+                        currentItem--;
+                        if (currentItem < 0)
+                            currentItem = mainMenuItems - 1;
+                        break;
+                    case ConsoleKey.Enter:
+                        OpenItem((currentItem + 1) % mainMenuItems);
+                        if (currentItem == 4)
                             exitProgram = true;
-                            break;
-                        case 1:
-                            Console.Clear();
-                            CheckPrice(printToConsole: true);
-                            PressAnyKey();
-                            break;
-                        case 2:
-                            GetPartyPrice();
-                            break;
-                        case 3:
-                            Console.Clear();
-                            WordLoop();
-                            break;
-                        case 4:
-                            FindThirdWord();
-                            PressAnyKey();
-                            break;
-                        default:
-                            MalformedInput();
-                            break;
-                    }
+                        break;
+                    case ConsoleKey.D0:
+                        OpenItem(0);
+                        exitProgram = true;
+                        break;
+                    case ConsoleKey.D1:
+                        Console.Clear();
+                        OpenItem(1);
+                        PressAnyKey();
+                        break;
+                    case ConsoleKey.D2:
+                        OpenItem(2);
+                        break;
+                    case ConsoleKey.D3:
+                        Console.Clear();
+                        OpenItem(3);
+                        break;
+                    case ConsoleKey.D4:
+                        OpenItem(4);
+                        PressAnyKey();
+                        break;
+                    default:
+                        MalformedInput();
+                        break;
                 }
-                else
-                {
-                    MalformedInput();
-                }
+
+                currentItem = currentItem % 5;
+
+            }
+        }
+
+        static void OpenItem(int itemNumber)
+        {
+            switch (itemNumber)
+            {
+                case 0:
+                    Console.WriteLine("Välkommen åter!");
+                    break;
+                case 1:
+                    Console.Clear();
+                    CheckPrice(printToConsole: true);
+                    PressAnyKey();
+                    break;
+                case 2:
+                    GetPartyPrice();
+                    break;
+                case 3:
+                    Console.Clear();
+                    WordLoop();
+                    break;
+                case 4:
+                    FindThirdWord();
+                    PressAnyKey();
+                    break;
+ 
+            }
+
+        }
+        static void ShowMainMenu(int currentItem)
+        {
+            Console.Clear();
+            Console.WriteLine("HUVUDMENY:");
+            Console.WriteLine("----------");
+
+            string[] items =
+            [
+                "Kontrollera pris för 1 person",
+                "Kontrollera pris för ett sällskap",
+                "Repetera ord eller mening 10 gånger",
+                "Hitta tredje ordet i en mening",
+                "Avsluta"
+            ];
+
+            for (int i = 0; i < items.Length; i++)
+            {
+                string selected = i == currentItem ? "X" : " ";
+                int menuNumber = i == items.Length - 1 ? 0 : i + 1;
+
+                Console.WriteLine($"{menuNumber}.[{selected}] {items[i]}");
             }
         }
 
@@ -93,7 +150,7 @@
             Console.Clear();
 
             string[] words;
-            while (true) 
+            while (true)
             {
                 Console.WriteLine("Skriv en mening med minst tre ord");
                 string? input = Console.ReadLine();
@@ -115,7 +172,7 @@
                     MalformedInput();
                 }
 
-            } 
+            }
         }
 
         static void GetPartyPrice()
