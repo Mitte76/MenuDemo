@@ -5,8 +5,6 @@
         static void Main(string[] args)
         {
 
-            Console.WriteLine();
-            Console.WriteLine();
             bool exitProgram = false;
             while (!exitProgram)
             {
@@ -105,6 +103,7 @@
         {
             int totalPrice = 0;
             int peopleInParty = 0;
+            bool canceled = false;
 
             while (true)
             {
@@ -115,6 +114,7 @@
                 {
                     if (peopleInParty == 0)
                     {
+                        canceled = true;
                         break;
                     }
                     else
@@ -124,6 +124,7 @@
                             int price = CheckPrice(i + 1);
                             if(price == -1)
                             {
+                                canceled = true;
                                 break;
                             }
                             totalPrice += price;
@@ -136,9 +137,8 @@
                     MalformedInput();
                 }
             }
-            if (totalPrice > 0)
+            if (!canceled)
             {
-
                 string noOfPeople = $"{"Antal personer i sällskapet:",-32} {peopleInParty}st";
                 string cost = $"{"Priset för sällskapet är:",-32} {totalPrice}kr";
                 Console.Write("\n\n");
@@ -147,8 +147,6 @@
                 Console.WriteLine(new string('-', Math.Max(noOfPeople.Length, cost.Length)));
 
             }
-
-
         }
         static int CheckPrice(int person = 0, bool printToConsole = false)
         {
@@ -171,22 +169,34 @@
 
                 if (int.TryParse(input, out int age))
                 {
-                    if (age < 20)
+                    if (age < 5)
                     {
                         if (printToConsole)
-                            Console.WriteLine($"Ungdomspris: {youthPrice}kr");
+                            Console.WriteLine($"\nGratis för barn under 5 år!");
+                        return 0;
+                    }
+                    else if (age < 20)
+                    {
+                        if (printToConsole)
+                            Console.WriteLine($"\nUngdomspris: {youthPrice}kr");
                         return youthPrice;
+                    }
+                    else if (age > 100)
+                    {
+                        if (printToConsole)
+                            Console.WriteLine($"\nGratis för personer över 100 år!");
+                        return 0;
                     }
                     else if (age > 64)
                     {
                         if (printToConsole)
-                            Console.WriteLine($"Pensionärspris: {seniorPrice}kr");
+                            Console.WriteLine($"\nPensionärspris: {seniorPrice}kr");
                         return seniorPrice;
                     }
                     else
                     {
                         if (printToConsole)
-                            Console.WriteLine($"Standardpris: {defaultPrice}kr");
+                            Console.WriteLine($"\nStandardpris: {defaultPrice}kr");
                         return defaultPrice;
                     }
                 }
