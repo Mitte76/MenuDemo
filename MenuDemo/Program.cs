@@ -179,7 +179,12 @@
                 words = input.Split(' ', StringSplitOptions.RemoveEmptyEntries);
                 if (words.Length > 2)
                 {
-                    Console.WriteLine($"Det tredje ordet är: \"{words[2]}\"");
+                    Console.Write($"Det tredje ordet är: \"");
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.Write($"{words[2]}");
+                    Console.ResetColor();
+                    Console.WriteLine($"\"");
+
                     break;
                 }
                 else
@@ -283,31 +288,55 @@
                     if (age < 5)
                     {
                         if (printToConsole)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Green;
                             Console.WriteLine($"\nGratis för barn under 5 år!");
+                            Console.ResetColor();
+                        }
                         return 0;
                     }
                     else if (age < 20)
                     {
                         if (printToConsole)
-                            Console.WriteLine($"\nUngdomspris: {youthPrice}kr");
+                        {
+                            Console.Write($"\nUngdomspris: ");
+                            Console.ForegroundColor = ConsoleColor.Green;
+                            Console.WriteLine($"{youthPrice}kr");
+                            Console.ResetColor();
+                        }
+
                         return youthPrice;
                     }
                     else if (age > 100)
                     {
                         if (printToConsole)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Green;
                             Console.WriteLine($"\nGratis för personer över 100 år!");
+                            Console.ResetColor();
+                        }
                         return 0;
                     }
                     else if (age > 64)
                     {
                         if (printToConsole)
-                            Console.WriteLine($"\nPensionärspris: {seniorPrice}kr");
+                        {
+                            Console.Write($"\nPensionärspris: ");
+                            Console.ForegroundColor = ConsoleColor.Green;
+                            Console.WriteLine($"{seniorPrice}kr");
+                            Console.ResetColor();
+                        }
                         return seniorPrice;
                     }
                     else
                     {
                         if (printToConsole)
-                            Console.WriteLine($"\nStandardpris: {defaultPrice}kr");
+                        {
+                            Console.Write($"\nStandardpris: ");
+                            Console.ForegroundColor = ConsoleColor.Green;
+                            Console.WriteLine($"{defaultPrice}kr");
+                            Console.ResetColor();
+                        }
                         return defaultPrice;
                     }
                 }
