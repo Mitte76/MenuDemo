@@ -83,7 +83,7 @@
                     FindThirdWord();
                     PressAnyKey();
                     break;
- 
+
             }
 
         }
@@ -104,11 +104,24 @@
 
             for (int i = 0; i < items.Length; i++)
             {
-                string selected = i == currentItem ? "X" : " ";
-                int menuNumber = i == items.Length - 1 ? 0 : i + 1;
-
-                Console.WriteLine($"{menuNumber}.[{selected}] {items[i]}");
+                bool selected = i == currentItem;
+                int menuNumber = i == items.Length - 1 ? 0 : i + 1; //Beräkning för att få alternativet "0. avsluta" längst ner
+                PrintMenuItem(menuNumber, items[i], selected);
             }
+        }
+
+        static void PrintMenuItem(int number, string text, bool selected)
+        {
+            Console.Write($"{number}.[");
+
+            Console.ForegroundColor = selected
+                ? ConsoleColor.Green
+                : ConsoleColor.DarkGray;
+
+            Console.Write(selected ? "X" : " ");
+
+            Console.ResetColor();
+            Console.WriteLine($"] {text}");
         }
 
         static void MalformedInput()
@@ -222,12 +235,21 @@
             }
             if (!canceled)
             {
-                string noOfPeople = $"{"Antal personer i sällskapet:",-32} {peopleCounted}st";
-                string cost = $"{"Priset för sällskapet är:",-32} {totalPrice}kr";
+                string noOfPeople1 = $"{"Antal personer i sällskapet:",-32} ";
+                string noOfPeople2 = $"{peopleCounted}st";
+                string cost1 = $"{"Priset för sällskapet är:",-32} ";
+                string cost2 = $"{totalPrice}kr";
+
                 Console.Write("\n\n");
-                Console.WriteLine(noOfPeople);
-                Console.WriteLine(cost);
-                Console.WriteLine(new string('-', Math.Max(noOfPeople.Length, cost.Length)));
+                Console.Write(noOfPeople1);
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine(noOfPeople2);
+                Console.ResetColor();
+                Console.Write(cost1);
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine(cost2);
+                Console.ResetColor();
+                Console.WriteLine(new string('-', Math.Max(noOfPeople1.Length + noOfPeople2.Length, cost1.Length + cost2.Length)));
                 PressAnyKey();
             }
             else Console.Clear();
